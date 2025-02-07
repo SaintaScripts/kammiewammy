@@ -1,59 +1,181 @@
-local Settings = {
-	['Material'] = Enum.Material.Neon, -- Material
-	['Color'] = Color3.fromRGB(0,255,255), -- Color
-	['Transparency'] = 0.7 -- 0 to 1 Transparency
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
+local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
+
+local Window = Fluent:CreateWindow({
+    Title = "Xero Hub" .. Fluent.Version,
+    SubTitle = "by @wockyrituals",
+    TabWidth = 195,
+    Size = UDim2.fromOffset(525, 325),
+    Acrylic = true, -- The blur may be detectable, setting this to false disables blur entirely
+    Theme = "Aqua",
+    MinimizeKey = Enum.KeyCode.LeftControl -- Used when theres no MinimizeKeybind
+})
+
+-- Fluent provides Lucide Icons https://lucide.dev/icons/ for the tabs, icons are optional
+local Tabs = {
+    Main = Window:AddTab({ Title = "Xero Reborn V2", Icon = "crosshair" }),
+    V2 = Window:AddTab({ Title = "Execute V1", Icon = "unlock" }),
+    V3 = Window:AddTab({ Title = "Execute V3", Icon = "lock" }),
+    Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
 }
 
-local ScreenGui = Instance.new('ScreenGui', game.CoreGui) -- Create screengui
-ScreenGui.IgnoreGuiInset = true
+Tabs.Main:AddParagraph({
+    Title = "G U A R D I N G",
+    Content = ""
+})
 
-local ViewportFrame = Instance.new('ViewportFrame', ScreenGui) -- Create viewport and define properties
-ViewportFrame.CurrentCamera = workspace.CurrentCamera
-ViewportFrame.Size = UDim2.new(1,0,1,0)
-ViewportFrame.BackgroundTransparency = 1
-ViewportFrame.ImageTransparency = Settings.Transparency
+local AutoGuardToggle = Tabs.Main:AddToggle("AutoGuard", {Title = "Autoguard", Default = false })
 
-local Chasms = {} -- Array for storing parts
+local Dropdown = Tabs.Main:AddDropdown("Dropdown", {
+        Title = "Guard Type",
+        Values = {"realistic", "demon lock", "gaurd like a mamba", "gaurd like a hof"},
+        Multi = false,
+        Default = 1,
+    })
 
-function generateChasm(player) -- functions that generates chasms for the player specififed
-	local Character = workspace:FindFirstChild(player.Name)
-	
-	if Character then
-		for _,Part in pairs(Character:GetChildren()) do
-			if Part:IsA('Part') or Part:IsA('MeshPart') then
-				local Chasm = Part:Clone()
-				
-				for _,Child in pairs(Chasm:GetChildren()) do
-					if Child:IsA('Decal') then
-						Child:Destroy()
-					end
-				end
-				
-				Chasm.Parent = ViewportFrame
-				Chasm.Material = Settings.Material
-				Chasm.Color = Settings.Color
-				Chasm.Anchored = true
-				
-				table.insert(Chasms, Chasm)
-			end
-		end
-	end
-end
+    Dropdown:SetValue("four")
 
-function clearChasms() -- remove all chasms
-	for _,Chasm in pairs(Chasms) do
-		Chasm:Destroy()
-	end
-	
-	Chasms = {}
-end
+    Dropdown:OnChanged(function(Value)
+        print("Dropdown changed:", Value)
+    end)
 
-while game:GetService('RunService').RenderStepped:Wait() do -- loop this process
-	clearChasms()
-	
-	for _,Player in pairs(game:GetService('Players'):GetPlayers()) do
-		if Player ~= game:GetService('Players').LocalPlayer then
-			generateChasm(Player)
-		end
-	end
-end
+Tabs.Main:AddParagraph({
+    Title = "D U N K   S P A M",
+    Content = ""
+})
+
+local AutoDunkToggle = Tabs.Main:AddToggle("AutoDunk", {Title = "Auto-Dunk", Default = false })
+
+AutoDunkToggle:OnChanged(function()
+    print("Auto-Dunk Toggle changed:", AutoDunkToggle.Value)
+end)
+
+local DunkTypeDropdown = Tabs.Main:AddDropdown("DunkType", {
+    Title = "Dunk Type",
+    Values = {"fly to rim", "teleport to rim", "lag to rim", "auto-speed to rim"},
+    Multi = false,
+    Default = 2,
+})
+
+DunkTypeDropdown:SetValue("fly to rim")
+
+DunkTypeDropdown:OnChanged(function(Value)
+    print("Dunk Type Dropdown changed:", Value)
+end)
+
+local DunkType2Dropdown = Tabs.Main:AddDropdown("DunkType2", {
+    Title = "Dunk Type 2",
+    Values = {"till match end", "till 18 points"},
+    Multi = false,
+    Default = 1,
+})
+
+DunkType2Dropdown:SetValue("till match end")
+
+DunkType2Dropdown:OnChanged(function(Value)
+    print("Dunk Type 2 Dropdown changed:", Value)
+end)
+
+Tabs.Main:AddParagraph({
+    Title = "T R O L L",
+    Content = ""
+})
+
+local PlayerToTrollInput = Tabs.Main:AddInput("PlayerToTroll", {
+    Title = "Player To Troll",
+    Default = "",
+    Placeholder = "Username",
+    Numeric = false, -- Only allows numbers
+    Finished = false, -- Only calls callback when you press enter
+    Callback = function(Value)
+        print("Player to troll changed:", Value)
+    end
+})
+
+Tabs.Main:AddButton({
+    Title = "Fling",
+    Description = "Fling a player",
+    Callback = function()
+        Window:Dialog({
+            Title = "Fling This Player?",
+            Content = "Do you want to fling this player?",
+            Buttons = {
+                {
+                    Title = "✅️",
+                    Callback = function()
+                        print("Confirmed fling action.")
+                    end
+                },
+                {
+                    Title = "❎️",
+                    Callback = function()
+                        print("Cancelled fling action.")
+                    end
+                }
+            }
+        })
+    end
+})
+
+Tabs.Main:AddButton({
+    Title = "Freeze",
+    Description = "Freeze a player",
+    Callback = function()
+        Window:Dialog({
+            Title = "Freeze This Player?",
+            Content = "Do you want to freeze this player?",
+            Buttons = {
+                {
+                    Title = "✅️",
+                    Callback = function()
+                        print("Confirmed freeze action.")
+                    end
+                },
+                {
+                    Title = "❎️",
+                    Callback = function()
+                        print("Cancelled freeze action.")
+                    end
+                }
+            }
+        })
+    end
+})
+
+    -- Addons:
+-- SaveManager (Allows you to have a configuration system)
+-- InterfaceManager (Allows you to have a interface managment system)
+
+-- Hand the library over to our managers
+SaveManager:SetLibrary(Fluent)
+InterfaceManager:SetLibrary(Fluent)
+
+-- Ignore keys that are used by ThemeManager.
+-- (we dont want configs to save themes, do we?)
+SaveManager:IgnoreThemeSettings()
+
+-- You can add indexes of elements the save manager should ignore
+SaveManager:SetIgnoreIndexes({})
+
+-- use case for doing it this way:
+-- a script hub could have themes in a global folder
+-- and game configs in a separate folder per game
+InterfaceManager:SetFolder("FluentScriptHub")
+SaveManager:SetFolder("FluentScriptHub/specific-game")
+
+InterfaceManager:BuildInterfaceSection(Tabs.Settings)
+SaveManager:BuildConfigSection(Tabs.Settings)
+
+
+Window:SelectTab(1)
+
+Fluent:Notify({
+    Title = "Xero",
+    Content = "The script has been loaded.",
+    Duration = 5
+})
+
+-- You can use the SaveManager:LoadAutoloadConfig() to load a config
+-- which has been marked to be one that auto loads!
+SaveManager:LoadAutoloadConfig()
