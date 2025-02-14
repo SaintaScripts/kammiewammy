@@ -24,23 +24,18 @@ Tabs.Main:AddParagraph({
     Content = ""
 })
 
-local AutoGuardToggle = Tabs.Main:AddToggle("AutoGuard", { Title = "Autoguard", Default = false })
 
 local Dropdown = Tabs.Main:AddDropdown("Dropdown", {
-    Title = "Guard Type",
-    Values = { "realistic", "demon lock", "gaurd like a mamba", "gaurd like a hof" },
+    Title = "Guarding Type",
+    Values = { "realistic", "decent", "professional", "extraordinary" },
     Multi = false,
     Default = 1,
 })
 
-Dropdown:SetValue("four")
-
-Dropdown:OnChanged(function(Value)
-    print("Dropdown changed:", Value)
-end)
+local AutoGuardToggle = Tabs.Main:AddToggle("AutoGuard", { Title = "Autoguard", Default = false })
 
 Tabs.Main:AddParagraph({
-    Title = "D U N K   S P A M",
+    Title = "D U N K I N G",
     Content = ""
 })
 
@@ -52,12 +47,12 @@ end)
 
 local DunkTypeDropdown = Tabs.Main:AddDropdown("DunkType", {
     Title = "Dunk Type",
-    Values = { "fly to rim", "teleport to rim", "lag to rim", "auto-speed to rim" },
+    Values = { "teleport to rim", "auto-speed to rim" },
     Multi = false,
-    Default = 2,
+    Default = 1,
 })
 
-DunkTypeDropdown:SetValue("fly to rim")
+DunkTypeDropdown:SetValue("teleport to rim")
 
 DunkTypeDropdown:OnChanged(function(Value)
     print("Dunk Type Dropdown changed:", Value)
@@ -65,7 +60,7 @@ end)
 
 local DunkType2Dropdown = Tabs.Main:AddDropdown("DunkType2", {
     Title = "Dunk Type 2",
-    Values = { "till match end", "till 18 points" },
+    Values = { "till match end", "till 12 points" },
     Multi = false,
     Default = 1,
 })
@@ -77,14 +72,14 @@ DunkType2Dropdown:OnChanged(function(Value)
 end)
 
 Tabs.Main:AddParagraph({
-    Title = "T R O L L",
+    Title = "T R O L L I N G",
     Content = ""
 })
 
 local PlayerToTrollInput = Tabs.Main:AddInput("PlayerToTroll", {
     Title = "Player To Troll",
     Default = "",
-    Placeholder = "Username",
+    Placeholder = "Enter Username",
     Numeric = false,
     Callback = function(Value)
         print("Player to troll changed:", Value)
